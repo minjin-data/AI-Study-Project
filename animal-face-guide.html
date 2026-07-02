@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>동물상 테스트 완전 정복: AI는 어떻게 내 얼굴을 알아볼까? | 위더앤픽</title>
+  <meta name="description" content="개상·고양이상·사슴상 동물상의 유래부터, AI가 사진을 분류하는 머신러닝 원리, 결과가 잘 나오는 사진 촬영 팁까지. 동물상 테스트를 재미있고 똑똑하게 즐기는 완전 정복 가이드." />
+  <link rel="canonical" href="https://minjin-data.github.io/AI-Study-Project/animal-face-guide.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="동물상 테스트 완전 정복: AI는 어떻게 내 얼굴을 알아볼까?" />
+  <meta property="og:description" content="동물상의 유래와 AI 이미지 분류 원리, 잘 나오는 사진 촬영 팁." />
+  <meta property="og:locale" content="ko_KR" />
+
+  <meta name="google-adsense-account" content="ca-pub-5785994812198345" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5785994812198345"
+    crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="./">🌤️ 위더앤픽</a>
+      <nav class="site-nav">
+        <a href="./">홈</a>
+        <a href="weather-guide.html">날씨 가이드</a>
+        <a href="animal-face-guide.html" class="active">동물상 테스트</a>
+        <a href="about.html">소개</a>
+        <a href="contact.html">문의</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="article">
+      <h1>동물상 테스트 완전 정복: AI는 어떻게 내 얼굴을 알아볼까?</h1>
+      <div class="meta">위더앤픽 편집부 · AI·재미 · 약 6분 분량</div>
+
+      <p class="lead">“너 완전 고양이상이야!” 한 번쯤 들어봤을 동물상 이야기. 위더앤픽의 동물상 테스트는 단순한 재미를 넘어, 실제 <strong>인공지능 이미지 분류</strong> 기술로 작동합니다. 동물상의 유래부터 AI가 얼굴을 판별하는 원리, 결과가 잘 나오는 팁까지 한 번에 알아봅니다.</p>
+
+      <h2>1. ‘동물상’이란 무엇일까?</h2>
+      <p>동물상은 사람의 얼굴 인상을 특정 동물의 이미지에 빗대어 표현하는 한국의 대중문화 놀이입니다. 이목구비의 형태, 분위기, 인상에서 느껴지는 느낌을 강아지·고양이·사슴·여우·곰 등에 비유하죠. 과학적 분류는 아니지만, 사람마다 풍기는 <strong>분위기를 재미있게 표현하는 방법</strong>으로 오랫동안 사랑받아 왔습니다.</p>
+      <ul>
+        <li><strong>개상 🐶</strong>: 순하고 친근하며 사람 좋아 보이는 인상. 둥글고 편안한 느낌.</li>
+        <li><strong>고양이상 🐱</strong>: 또렷하고 도도한 인상. 올라간 눈꼬리와 시크한 분위기.</li>
+        <li><strong>사슴상 🦌</strong>: 맑고 선한 눈망울, 청순하고 부드러운 인상.</li>
+      </ul>
+
+      <h2>2. AI는 어떻게 얼굴을 ‘동물상’으로 분류할까?</h2>
+      <p>위더앤픽의 테스트는 구글의 <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">Teachable Machine</a>으로 만든 <strong>이미지 분류 모델</strong>을 사용합니다. 작동 원리를 쉽게 풀어보면 다음과 같습니다.</p>
+      <h3>① 학습 데이터 수집</h3>
+      <p>먼저 ‘개상’, ‘고양이상’, ‘사슴상’ 각각에 해당하는 사진을 여러 장 모아 AI에게 보여줍니다. 이 사진 묶음이 AI의 <strong>교과서</strong>가 됩니다.</p>
+      <h3>② 특징 학습</h3>
+      <p>모델은 사진 속 픽셀 패턴에서 눈·코·입의 형태, 윤곽선, 명암 같은 <strong>특징(feature)</strong>을 스스로 뽑아내고, 각 동물상 그룹이 어떤 특징을 공유하는지 수치로 익힙니다. 사람이 규칙을 하나하나 알려주는 게 아니라, <strong>예시로부터 패턴을 스스로 찾아내는 것</strong>이 머신러닝의 핵심입니다.</p>
+      <h3>③ 확률로 예측</h3>
+      <p>새로운 얼굴 사진이 들어오면, 모델은 학습한 특징과 비교해 “개상 39%, 고양이상 43%, 사슴상 18%”처럼 <strong>각 클래스에 대한 확률</strong>을 출력합니다. 가장 높은 값이 최종 결과가 되죠. 그래서 결과는 ‘정답’이 아니라 <strong>가장 비슷하다고 판단한 후보</strong>에 가깝습니다.</p>
+      <blockquote>즉 AI는 “이 얼굴이 어떤 동물상 사진들과 통계적으로 가장 닮았는가?”를 계산할 뿐, 관상을 보거나 성격을 알아내는 것은 아닙니다.</blockquote>
+
+      <h2>3. 결과가 잘 나오는 사진 촬영 팁</h2>
+      <p>이미지 분류 모델은 사진의 품질에 민감합니다. 아래 팁을 따르면 더 안정적인 결과를 얻을 수 있어요.</p>
+      <ul>
+        <li><strong>정면·상반신</strong>: 얼굴이 화면 중앙에 크고 또렷하게 나오도록.</li>
+        <li><strong>밝은 조명</strong>: 그림자가 얼굴을 가리지 않는 균일한 빛에서.</li>
+        <li><strong>가림 최소화</strong>: 마스크·선글라스·과한 앞머리는 인식을 방해합니다.</li>
+        <li><strong>단순한 배경</strong>: 복잡한 배경은 특징 추출을 어렵게 합니다.</li>
+        <li><strong>자연스러운 표정</strong>: 과한 표정보다 편안한 얼굴이 일관된 결과를 줍니다.</li>
+      </ul>
+
+      <h2>4. 개인정보는 안전할까?</h2>
+      <div class="callout">🔒 <strong>업로드한 사진은 서버로 전송되지 않습니다.</strong> 위더앤픽의 동물상 테스트는 AI 모델을 <strong>여러분의 브라우저 안에서 직접 실행</strong>합니다(TensorFlow.js 기반 클라이언트 사이드 처리). 사진은 분석이 끝나면 페이지를 벗어나지 않으며, 어디에도 저장되지 않습니다.</div>
+      <p>덕분에 재미로 즐기면서도 사진이 외부로 유출될 걱정 없이 안심하고 사용할 수 있습니다. 자세한 내용은 <a href="privacy.html">개인정보처리방침</a>에서 확인하실 수 있어요.</p>
+
+      <h2>5. 결과는 ‘재미’로 즐기세요</h2>
+      <p>동물상 테스트는 소수의 예시로 학습한 가벼운 모델이라, 같은 사람이라도 각도·조명·표정에 따라 결과가 달라질 수 있습니다. 결과는 나를 규정하는 잣대가 아니라 <strong>친구들과 웃으며 나누는 이야깃거리</strong>입니다. 여러 사진으로 시도해 보며 어떤 동물상이 자주 나오는지 비교해 보는 것도 소소한 재미랍니다.</p>
+
+      <h2>자주 묻는 질문 (FAQ)</h2>
+      <h3>Q. 왜 매번 결과가 조금씩 다르게 나오나요?</h3>
+      <p>A. 모델은 사진의 픽셀 패턴을 보고 판단하기 때문에, 각도·조명·표정이 바뀌면 특징도 달라져 확률이 변합니다. 정면·밝은 조명 사진일수록 일관성이 높습니다.</p>
+      <h3>Q. 개·고양이·사슴 말고 다른 동물상은 없나요?</h3>
+      <p>A. 현재 모델은 세 가지 클래스(개·고양이·사슴)로 학습되어 있습니다. 학습 데이터를 늘리면 더 많은 동물상으로 확장할 수 있습니다.</p>
+      <h3>Q. 웹캠으로도 되나요?</h3>
+      <p>A. 네. ‘웹캠으로’ 버튼을 누르면 실시간으로 분석합니다. 카메라 영상 역시 브라우저 안에서만 처리되며 저장되지 않습니다.</p>
+
+      <h2>마치며</h2>
+      <p>재미 뒤에 숨은 AI의 원리를 알고 나면 테스트가 두 배로 흥미로워집니다. 지금 바로 내 동물상을 확인해 보세요!</p>
+      <p style="margin-top:20px"><a class="btn primary" href="./#animal-test" style="color:#fff;background:var(--blue)">🐾 동물상 테스트 하러 가기</a></p>
+    </article>
+
+    <div class="ad-slot" aria-hidden="true"><small>ADVERTISEMENT</small></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="foot-links">
+      <a href="about.html">소개</a>
+      <a href="weather-guide.html">날씨 가이드</a>
+      <a href="animal-face-guide.html">동물상 테스트</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="contact.html">문의</a>
+    </div>
+    <p class="copy">© 2026 위더앤픽(Weather&Pick) · 날씨: Open-Meteo · 동물상 모델: Teachable Machine</p>
+  </footer>
+</body>
+</html>

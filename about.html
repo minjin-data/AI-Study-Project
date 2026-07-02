@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사이트 소개 | 위더앤픽</title>
+  <meta name="description" content="위더앤픽(Weather&Pick)은 서울의 실시간 날씨 예보와 AI 동물상 테스트를 제공하는 생활 콘텐츠 사이트입니다. 사이트의 목적과 운영 방식, 데이터 출처를 소개합니다." />
+  <link rel="canonical" href="https://minjin-data.github.io/AI-Study-Project/about.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="사이트 소개 | 위더앤픽" />
+  <meta property="og:locale" content="ko_KR" />
+
+  <meta name="google-adsense-account" content="ca-pub-5785994812198345" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5785994812198345"
+    crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="./">🌤️ 위더앤픽</a>
+      <nav class="site-nav">
+        <a href="./">홈</a>
+        <a href="weather-guide.html">날씨 가이드</a>
+        <a href="animal-face-guide.html">동물상 테스트</a>
+        <a href="about.html" class="active">소개</a>
+        <a href="contact.html">문의</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="article">
+      <h1>사이트 소개</h1>
+      <div class="meta">위더앤픽(Weather&amp;Pick) 소개</div>
+
+      <p class="lead">위더앤픽은 <strong>매일의 서울 날씨</strong>와 <strong>재미있는 AI 콘텐츠</strong>를 한곳에서 만날 수 있는 생활 정보 사이트입니다. 하루를 준비하는 실용적인 정보와, 잠깐의 즐거움을 함께 픽(Pick)한다는 뜻을 담았습니다.</p>
+
+      <h2>무엇을 제공하나요?</h2>
+      <ul>
+        <li><strong>서울 7일 날씨 예보</strong> — 요일별 최고·최저기온, 날씨 상태, 강수확률을 실시간으로 보여줍니다.</li>
+        <li><strong>동물상 AI 테스트</strong> — 얼굴 사진으로 개·고양이·사슴 중 어떤 동물상인지 알려주는 이미지 분류 테스트입니다.</li>
+        <li><strong>생활·AI 콘텐츠</strong> — 예보를 제대로 읽는 법, AI 이미지 분류의 원리 등 알아두면 유용한 글을 제공합니다.</li>
+      </ul>
+
+      <h2>데이터와 기술 출처</h2>
+      <p>정보의 신뢰성을 위해 사용하는 데이터와 기술의 출처를 투명하게 공개합니다.</p>
+      <ul>
+        <li><strong>날씨 데이터</strong>: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> 공개 날씨 API (여러 기상청의 수치예보모델 종합)</li>
+        <li><strong>동물상 모델</strong>: 구글 <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">Teachable Machine</a> 기반 이미지 분류 모델, <a href="https://www.tensorflow.org/js" target="_blank" rel="noopener">TensorFlow.js</a>로 브라우저에서 실행</li>
+      </ul>
+
+      <h2>운영 원칙</h2>
+      <ul>
+        <li><strong>개인정보 보호</strong>: 동물상 테스트의 사진은 서버로 전송하지 않고 브라우저 안에서만 처리합니다.</li>
+        <li><strong>정확성</strong>: 예보는 예측 정보임을 명확히 안내하고, 데이터 출처를 밝힙니다.</li>
+        <li><strong>투명성</strong>: 광고(Google AdSense) 게재 사실과 데이터 활용 방식을 <a href="privacy.html">개인정보처리방침</a>에 공개합니다.</li>
+      </ul>
+
+      <h2>문의</h2>
+      <p>제휴, 오류 제보, 기타 문의는 <a href="contact.html">문의 페이지</a>를 통해 언제든 연락 주세요. 여러분의 의견으로 위더앤픽은 계속 개선됩니다.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="foot-links">
+      <a href="about.html">소개</a>
+      <a href="weather-guide.html">날씨 가이드</a>
+      <a href="animal-face-guide.html">동물상 테스트</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="contact.html">문의</a>
+    </div>
+    <p class="copy">© 2026 위더앤픽(Weather&Pick) · 날씨: Open-Meteo · 동물상 모델: Teachable Machine</p>
+  </footer>
+</body>
+</html>

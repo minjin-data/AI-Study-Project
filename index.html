@@ -3,176 +3,145 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>서울 이번 주 날씨</title>
+  <title>위더앤픽 | 서울 날씨 예보 & 동물상 AI 테스트</title>
+  <meta name="description" content="위더앤픽(Weather&Pick)은 서울의 7일 날씨 예보를 한눈에 보여주고, 재미있는 동물상 AI 테스트를 제공하는 생활 콘텐츠 사이트입니다. 매일의 날씨와 즐거움을 함께 픽하세요." />
+  <link rel="canonical" href="https://minjin-data.github.io/AI-Study-Project/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="위더앤픽 | 서울 날씨 예보 & 동물상 AI 테스트" />
+  <meta property="og:description" content="서울 7일 날씨 예보와 재미있는 동물상 AI 테스트를 한 곳에서." />
+  <meta property="og:locale" content="ko_KR" />
 
   <!-- Google AdSense -->
   <meta name="google-adsense-account" content="ca-pub-5785994812198345" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5785994812198345"
     crossorigin="anonymous"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Segoe UI", "Malgun Gothic", "맑은 고딕", sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(160deg, #4a90d9 0%, #83b9e8 45%, #cfe4f7 100%);
-      color: #1b2a3a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 16px 48px;
-    }
-    header { text-align: center; color: #fff; margin-bottom: 28px; }
-    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
-    header p { margin-top: 6px; font-size: 0.95rem; opacity: 0.9; }
-    #updated { font-size: 0.8rem; opacity: 0.8; margin-top: 4px; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 16px;
-      width: 100%;
-      max-width: 1000px;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.92);
-      border-radius: 18px;
-      padding: 20px 14px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(30, 60, 100, 0.18);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(30, 60, 100, 0.28); }
-    .card.today {
-      background: #fff;
-      outline: 3px solid #ffd166;
-    }
-    .day { font-weight: 700; font-size: 1.05rem; }
-    .day.sun { color: #e63946; }
-    .day.sat { color: #1d6fd8; }
-    .date { font-size: 0.8rem; color: #5a6b7d; margin-bottom: 10px; }
-    .icon { font-size: 2.6rem; line-height: 1.1; margin: 6px 0; }
-    .desc { font-size: 0.82rem; color: #40506080; color: #405060; min-height: 2.2em; margin-bottom: 10px; }
-    .temp { font-size: 1.05rem; font-weight: 600; }
-    .temp .max { color: #e63946; }
-    .temp .min { color: #1d6fd8; }
-    .rain { margin-top: 8px; font-size: 0.8rem; color: #1d6fd8; }
-
-    .state { color: #fff; font-size: 1rem; text-align: center; margin-top: 40px; }
-    .state button {
-      margin-top: 14px; padding: 8px 18px; border: none; border-radius: 20px;
-      background: #fff; color: #2b6cb0; font-weight: 600; cursor: pointer;
-    }
-    footer { margin-top: 32px; color: #ffffffcc; font-size: 0.78rem; text-align: center; }
-    footer a { color: #fff; }
-
-    /* ===== 동물상 테스트 ===== */
-    .animal-test {
-      width: 100%; max-width: 560px; margin: 44px auto 0;
-      background: rgba(255, 255, 255, 0.95); border-radius: 22px;
-      padding: 28px 24px; box-shadow: 0 10px 30px rgba(30, 60, 100, 0.2);
-      text-align: center;
-    }
-    .animal-test h2 { font-size: 1.4rem; margin-bottom: 6px; }
-    .animal-test .sub { color: #5a6b7d; font-size: 0.9rem; margin-bottom: 20px; }
-    .at-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
-    .at-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 18px; border: none; border-radius: 24px; cursor: pointer;
-      background: #4a90d9; color: #fff; font-size: 0.95rem; font-weight: 600;
-    }
-    .at-btn.ghost { background: #eef4fb; color: #2b6cb0; }
-    .at-btn:disabled { opacity: 0.5; cursor: default; }
-    #at-media { display: flex; justify-content: center; margin-bottom: 16px; }
-    #at-media img, #at-media canvas, #at-media video {
-      max-width: 280px; max-height: 280px; border-radius: 16px; object-fit: cover;
-      box-shadow: 0 4px 14px rgba(30, 60, 100, 0.18);
-    }
-    #at-result { min-height: 1.4em; font-size: 1.25rem; font-weight: 700; margin-bottom: 14px; color: #1b2a3a; }
-    #at-result .emoji { font-size: 1.5rem; }
-    .at-bar { text-align: left; margin: 8px 0; }
-    .at-bar .lbl { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px; color: #405060; }
-    .at-bar .track { background: #e6edf5; border-radius: 8px; height: 12px; overflow: hidden; }
-    .at-bar .fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #4a90d9, #83b9e8); transition: width .4s ease; }
-    .at-bar.top .fill { background: linear-gradient(90deg, #ff8c42, #ffd166); }
-    #at-status { font-size: 0.82rem; color: #5a6b7d; margin-top: 12px; min-height: 1.2em; }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <h1>🌤️ 서울 이번 주 날씨</h1>
-    <p>서울특별시 · 7일 예보</p>
-    <div id="updated"></div>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="./">🌤️ 위더앤픽</a>
+      <nav class="site-nav">
+        <a href="./" class="active">홈</a>
+        <a href="weather-guide.html">날씨 가이드</a>
+        <a href="animal-face-guide.html">동물상 테스트</a>
+        <a href="about.html">소개</a>
+        <a href="contact.html">문의</a>
+      </nav>
+    </div>
   </header>
 
-  <div id="content" class="grid"></div>
-  <div id="state" class="state">날씨 정보를 불러오는 중…</div>
+  <main>
+    <section class="hero">
+      <h1>🌤️ 위더앤픽 — 오늘의 서울, 그리고 나</h1>
+      <p>서울의 7일 날씨 예보를 한눈에 보고, AI 동물상 테스트로 즐거움 한 스푼.</p>
+      <div class="cta">
+        <a class="btn primary" href="#weather">이번 주 날씨 보기</a>
+        <a class="btn outline" href="#animal-test">동물상 테스트 하기</a>
+      </div>
+    </section>
 
-  <section class="animal-test" id="animal-test">
-    <h2>🐾 동물상 테스트</h2>
-    <p class="sub">얼굴 사진을 올리면 어떤 동물상인지 알려드려요 · 개 🐶 · 고양이 🐱 · 사슴 🦌</p>
-    <div class="at-controls">
-      <button class="at-btn" id="at-upload-btn">📷 사진 올리기</button>
-      <button class="at-btn ghost" id="at-webcam-btn">📹 웹캠으로</button>
-      <input type="file" id="at-file" accept="image/*" hidden />
+    <!-- 날씨 -->
+    <section class="section container" id="weather">
+      <div class="section-head">
+        <h2>서울 이번 주 날씨</h2>
+        <p>서울특별시 · 7일 예보 · 실시간 데이터</p>
+      </div>
+      <div id="updated"></div>
+      <div id="content" class="grid"></div>
+      <div id="state" class="state">날씨 정보를 불러오는 중…</div>
+      <p style="text-align:center;margin-top:16px">
+        <a href="weather-guide.html">📖 예보를 200% 활용하는 서울 날씨 가이드 읽기 →</a>
+      </p>
+    </section>
+
+    <!-- 광고 슬롯 (자동 광고 사용 시 비워둬도 무방) -->
+    <div class="ad-slot" aria-hidden="true"><small>ADVERTISEMENT</small></div>
+
+    <!-- 동물상 테스트 -->
+    <section class="section container" id="animal-test">
+      <div class="section-head">
+        <h2>🐾 동물상 테스트</h2>
+        <p>내 얼굴은 개상? 고양이상? 사슴상? AI가 알려드려요</p>
+      </div>
+      <div class="animal-test">
+        <p class="sub">얼굴 사진을 올리면 어떤 동물상인지 알려드려요 · 개 🐶 · 고양이 🐱 · 사슴 🦌</p>
+        <div class="at-controls">
+          <button class="at-btn" id="at-upload-btn">📷 사진 올리기</button>
+          <button class="at-btn ghost" id="at-webcam-btn">📹 웹캠으로</button>
+          <input type="file" id="at-file" accept="image/*" hidden />
+        </div>
+        <div id="at-media"></div>
+        <div id="at-result"></div>
+        <div id="at-bars"></div>
+        <div id="at-status"></div>
+        <p class="privacy-note">🔒 업로드한 사진은 서버로 전송되지 않고, 브라우저 안에서만 분석됩니다.</p>
+      </div>
+      <p style="text-align:center;margin-top:16px">
+        <a href="animal-face-guide.html">🤖 AI가 얼굴을 알아보는 원리와 정확도 팁 →</a>
+      </p>
+    </section>
+
+    <!-- 소개 콘텐츠 -->
+    <section class="section container">
+      <div class="section-head">
+        <h2>위더앤픽을 더 알아보기</h2>
+        <p>날씨와 재미, 두 가지 콘텐츠를 깊이 있게 준비했어요</p>
+      </div>
+      <div class="card-links">
+        <a class="link-card" href="weather-guide.html">
+          <div class="emoji">📖</div>
+          <h3>서울 날씨 완벽 가이드</h3>
+          <p>강수확률의 진짜 의미부터 계절별 옷차림까지, 예보를 제대로 읽는 법.</p>
+        </a>
+        <a class="link-card" href="animal-face-guide.html">
+          <div class="emoji">🐾</div>
+          <h3>동물상 테스트 완전 정복</h3>
+          <p>동물상의 유래와 AI 이미지 분류 원리, 잘 나오는 사진 촬영 팁.</p>
+        </a>
+        <a class="link-card" href="about.html">
+          <div class="emoji">💡</div>
+          <h3>사이트 소개</h3>
+          <p>위더앤픽은 어떤 사이트이고, 데이터는 어디서 오는지 소개합니다.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="foot-links">
+      <a href="about.html">소개</a>
+      <a href="weather-guide.html">날씨 가이드</a>
+      <a href="animal-face-guide.html">동물상 테스트</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="contact.html">문의</a>
     </div>
-    <div id="at-media"></div>
-    <div id="at-result"></div>
-    <div id="at-bars"></div>
-    <div id="at-status"></div>
-  </section>
-
-  <footer>
-    데이터 제공: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
-    · 동물상 모델: <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">Teachable Machine</a>
+    <p class="copy">© 2026 위더앤픽(Weather&Pick) · 날씨: Open-Meteo · 동물상 모델: Teachable Machine</p>
   </footer>
 
   <script>
-    // 서울 좌표
+    // ===== 서울 날씨 =====
     const LAT = 37.5665, LON = 126.9780;
     const API = `https://api.open-meteo.com/v1/forecast`
       + `?latitude=${LAT}&longitude=${LON}`
       + `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max`
       + `&timezone=Asia%2FSeoul&forecast_days=7`;
 
-    // WMO 날씨 코드 → 이모지 + 한글 설명
     const WMO = {
-      0:  ["☀️", "맑음"],
-      1:  ["🌤️", "대체로 맑음"],
-      2:  ["⛅", "구름 조금"],
-      3:  ["☁️", "흐림"],
-      45: ["🌫️", "안개"],
-      48: ["🌫️", "짙은 안개"],
-      51: ["🌦️", "약한 이슬비"],
-      53: ["🌦️", "이슬비"],
-      55: ["🌧️", "강한 이슬비"],
-      56: ["🌧️", "언 이슬비"],
-      57: ["🌧️", "강한 언 이슬비"],
-      61: ["🌦️", "약한 비"],
-      63: ["🌧️", "비"],
-      65: ["🌧️", "강한 비"],
-      66: ["🌧️", "언 비"],
-      67: ["🌧️", "강한 언 비"],
-      71: ["🌨️", "약한 눈"],
-      73: ["🌨️", "눈"],
-      75: ["❄️", "강한 눈"],
-      77: ["🌨️", "싸락눈"],
-      80: ["🌦️", "약한 소나기"],
-      81: ["🌧️", "소나기"],
-      82: ["⛈️", "강한 소나기"],
-      85: ["🌨️", "약한 소낙눈"],
-      86: ["❄️", "강한 소낙눈"],
-      95: ["⛈️", "천둥번개"],
-      96: ["⛈️", "우박 동반 뇌우"],
-      99: ["⛈️", "강한 우박 뇌우"],
+      0:["☀️","맑음"],1:["🌤️","대체로 맑음"],2:["⛅","구름 조금"],3:["☁️","흐림"],
+      45:["🌫️","안개"],48:["🌫️","짙은 안개"],51:["🌦️","약한 이슬비"],53:["🌦️","이슬비"],55:["🌧️","강한 이슬비"],
+      56:["🌧️","언 이슬비"],57:["🌧️","강한 언 이슬비"],61:["🌦️","약한 비"],63:["🌧️","비"],65:["🌧️","강한 비"],
+      66:["🌧️","언 비"],67:["🌧️","강한 언 비"],71:["🌨️","약한 눈"],73:["🌨️","눈"],75:["❄️","강한 눈"],77:["🌨️","싸락눈"],
+      80:["🌦️","약한 소나기"],81:["🌧️","소나기"],82:["⛈️","강한 소나기"],85:["🌨️","약한 소낙눈"],86:["❄️","강한 소낙눈"],
+      95:["⛈️","천둥번개"],96:["⛈️","우박 동반 뇌우"],99:["⛈️","강한 우박 뇌우"],
     };
-
-    const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
+    const WEEKDAYS = ["일","월","화","수","목","금","토"];
 
     function render(data) {
       const d = data.daily;
       const todayStr = new Date().toISOString().slice(0, 10);
       let html = "";
-
       for (let i = 0; i < d.time.length; i++) {
         const dateObj = new Date(d.time[i] + "T00:00:00");
         const wd = dateObj.getDay();
@@ -181,135 +150,93 @@
         const dayClass = wd === 0 ? "sun" : wd === 6 ? "sat" : "";
         const label = isToday ? "오늘" : WEEKDAYS[wd] + "요일";
         const rain = d.precipitation_probability_max[i];
-
         html += `
           <div class="card ${isToday ? "today" : ""}">
             <div class="day ${dayClass}">${label}</div>
             <div class="date">${dateObj.getMonth() + 1}/${dateObj.getDate()}</div>
             <div class="icon">${icon}</div>
             <div class="desc">${desc}</div>
-            <div class="temp">
-              <span class="max">${Math.round(d.temperature_2m_max[i])}°</span>
-              /
-              <span class="min">${Math.round(d.temperature_2m_min[i])}°</span>
-            </div>
+            <div class="temp"><span class="max">${Math.round(d.temperature_2m_max[i])}°</span> / <span class="min">${Math.round(d.temperature_2m_min[i])}°</span></div>
             <div class="rain">💧 ${rain ?? 0}%</div>
           </div>`;
       }
-
       document.getElementById("content").innerHTML = html;
       document.getElementById("state").style.display = "none";
       const now = new Date();
       document.getElementById("updated").textContent =
         `업데이트: ${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()} ` +
-        `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+        `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
     }
-
     function showError() {
       const state = document.getElementById("state");
       state.style.display = "block";
-      state.innerHTML =
-        `날씨 정보를 불러오지 못했습니다.<br>인터넷 연결을 확인해 주세요.` +
-        `<br><button onclick="load()">다시 시도</button>`;
+      state.innerHTML = `날씨 정보를 불러오지 못했습니다.<br>인터넷 연결을 확인해 주세요.<br><button onclick="load()">다시 시도</button>`;
     }
-
     function load() {
       const state = document.getElementById("state");
-      state.style.display = "block";
-      state.textContent = "날씨 정보를 불러오는 중…";
-      fetch(API)
-        .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(render)
-        .catch((e) => { console.error(e); showError(); });
+      state.style.display = "block"; state.textContent = "날씨 정보를 불러오는 중…";
+      fetch(API).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(render).catch((e) => { console.error(e); showError(); });
     }
-
     load();
   </script>
 
-  <!-- Teachable Machine 라이브러리 (모델 tfjs 1.7.4 기준) -->
+  <!-- Teachable Machine 라이브러리 -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
   <script>
     (function () {
       const MODEL_URL = "https://teachablemachine.withgoogle.com/models/DbfKo3m-K/";
       const EMOJI = { "개": "🐶", "고양이": "🐱", "사슴": "🦌" };
-
-      const fileInput = document.getElementById("at-file");
-      const uploadBtn = document.getElementById("at-upload-btn");
-      const webcamBtn = document.getElementById("at-webcam-btn");
-      const mediaEl = document.getElementById("at-media");
-      const resultEl = document.getElementById("at-result");
-      const barsEl = document.getElementById("at-bars");
-      const statusEl = document.getElementById("at-status");
-
+      const $ = (id) => document.getElementById(id);
+      const fileInput = $("at-file"), uploadBtn = $("at-upload-btn"), webcamBtn = $("at-webcam-btn");
+      const mediaEl = $("at-media"), resultEl = $("at-result"), barsEl = $("at-bars"), statusEl = $("at-status");
       let model = null, webcam = null, rafId = null;
-
       const setStatus = (m) => { statusEl.textContent = m || ""; };
 
       async function ensureModel() {
         if (model) return model;
         setStatus("모델을 불러오는 중…");
         model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
-        setStatus("");
-        return model;
+        setStatus(""); return model;
       }
-
       function stopWebcam() {
         if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
         if (webcam) { try { webcam.stop(); } catch (e) {} webcam = null; }
         webcamBtn.textContent = "📹 웹캠으로";
       }
-
       function renderPredictions(preds) {
         const sorted = [...preds].sort((a, b) => b.probability - a.probability);
         const top = sorted[0];
-        resultEl.innerHTML =
-          `당신은 <span class="emoji">${EMOJI[top.className] || "🐾"}</span> ` +
-          `<b>${top.className}상</b>! ` +
-          `<span style="font-size:0.9rem;color:#5a6b7d">(${Math.round(top.probability * 100)}%)</span>`;
+        resultEl.innerHTML = `당신은 <span class="emoji">${EMOJI[top.className] || "🐾"}</span> <b>${top.className}상</b>! <span style="font-size:0.9rem;color:#5a6b7d">(${Math.round(top.probability*100)}%)</span>`;
         barsEl.innerHTML = sorted.map((p, i) => {
           const pct = Math.round(p.probability * 100);
-          return `<div class="at-bar ${i === 0 ? "top" : ""}">
-              <div class="lbl"><span>${EMOJI[p.className] || ""} ${p.className}</span><span>${pct}%</span></div>
-              <div class="track"><div class="fill" style="width:${pct}%"></div></div>
-            </div>`;
+          return `<div class="at-bar ${i===0?"top":""}"><div class="lbl"><span>${EMOJI[p.className]||""} ${p.className}</span><span>${pct}%</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`;
         }).join("");
       }
-
-      // ---- 사진 업로드 ----
       uploadBtn.addEventListener("click", () => fileInput.click());
       fileInput.addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        const file = e.target.files[0]; if (!file) return;
         stopWebcam();
-        try { await ensureModel(); }
-        catch (err) { console.error(err); setStatus("모델을 불러오지 못했어요. 잠시 후 다시 시도해 주세요."); return; }
-
+        try { await ensureModel(); } catch (err) { console.error(err); setStatus("모델을 불러오지 못했어요. 잠시 후 다시 시도해 주세요."); return; }
         const img = new Image();
         img.onload = async () => {
-          mediaEl.innerHTML = ""; mediaEl.appendChild(img);
-          setStatus("분석 중…");
+          mediaEl.innerHTML = ""; mediaEl.appendChild(img); setStatus("분석 중…");
           try { renderPredictions(await model.predict(img)); setStatus(""); }
           catch (err) { console.error(err); setStatus("분석에 실패했어요."); }
         };
         img.onerror = () => setStatus("이미지를 불러오지 못했어요.");
         img.src = URL.createObjectURL(file);
       });
-
-      // ---- 웹캠 (실시간) ----
       webcamBtn.addEventListener("click", async () => {
         if (webcam) { stopWebcam(); mediaEl.innerHTML = ""; setStatus(""); return; }
-        try { await ensureModel(); }
-        catch (err) { console.error(err); setStatus("모델을 불러오지 못했어요."); return; }
-
+        try { await ensureModel(); } catch (err) { console.error(err); setStatus("모델을 불러오지 못했어요."); return; }
         setStatus("카메라를 켜는 중…");
-        webcam = new tmImage.Webcam(280, 280, true); // width, height, flip(좌우반전)
+        webcam = new tmImage.Webcam(280, 280, true);
         try { await webcam.setup(); await webcam.play(); }
         catch (err) { console.error(err); setStatus("카메라 접근이 거부됐어요. ‘사진 올리기’를 이용해 주세요."); webcam = null; return; }
-
         webcamBtn.textContent = "⏹ 웹캠 끄기";
-        mediaEl.innerHTML = ""; mediaEl.appendChild(webcam.canvas);
-        setStatus("실시간 분석 중…");
+        mediaEl.innerHTML = ""; mediaEl.appendChild(webcam.canvas); setStatus("실시간 분석 중…");
         const loop = async () => {
           if (!webcam) return;
           webcam.update();
