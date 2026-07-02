@@ -59,6 +59,37 @@
     }
     footer { margin-top: 32px; color: #ffffffcc; font-size: 0.78rem; text-align: center; }
     footer a { color: #fff; }
+
+    /* ===== 동물상 테스트 ===== */
+    .animal-test {
+      width: 100%; max-width: 560px; margin: 44px auto 0;
+      background: rgba(255, 255, 255, 0.95); border-radius: 22px;
+      padding: 28px 24px; box-shadow: 0 10px 30px rgba(30, 60, 100, 0.2);
+      text-align: center;
+    }
+    .animal-test h2 { font-size: 1.4rem; margin-bottom: 6px; }
+    .animal-test .sub { color: #5a6b7d; font-size: 0.9rem; margin-bottom: 20px; }
+    .at-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .at-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px; border: none; border-radius: 24px; cursor: pointer;
+      background: #4a90d9; color: #fff; font-size: 0.95rem; font-weight: 600;
+    }
+    .at-btn.ghost { background: #eef4fb; color: #2b6cb0; }
+    .at-btn:disabled { opacity: 0.5; cursor: default; }
+    #at-media { display: flex; justify-content: center; margin-bottom: 16px; }
+    #at-media img, #at-media canvas, #at-media video {
+      max-width: 280px; max-height: 280px; border-radius: 16px; object-fit: cover;
+      box-shadow: 0 4px 14px rgba(30, 60, 100, 0.18);
+    }
+    #at-result { min-height: 1.4em; font-size: 1.25rem; font-weight: 700; margin-bottom: 14px; color: #1b2a3a; }
+    #at-result .emoji { font-size: 1.5rem; }
+    .at-bar { text-align: left; margin: 8px 0; }
+    .at-bar .lbl { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px; color: #405060; }
+    .at-bar .track { background: #e6edf5; border-radius: 8px; height: 12px; overflow: hidden; }
+    .at-bar .fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #4a90d9, #83b9e8); transition: width .4s ease; }
+    .at-bar.top .fill { background: linear-gradient(90deg, #ff8c42, #ffd166); }
+    #at-status { font-size: 0.82rem; color: #5a6b7d; margin-top: 12px; min-height: 1.2em; }
   </style>
 </head>
 <body>
@@ -71,8 +102,23 @@
   <div id="content" class="grid"></div>
   <div id="state" class="state">날씨 정보를 불러오는 중…</div>
 
+  <section class="animal-test" id="animal-test">
+    <h2>🐾 동물상 테스트</h2>
+    <p class="sub">얼굴 사진을 올리면 어떤 동물상인지 알려드려요 · 개 🐶 · 고양이 🐱 · 사슴 🦌</p>
+    <div class="at-controls">
+      <button class="at-btn" id="at-upload-btn">📷 사진 올리기</button>
+      <button class="at-btn ghost" id="at-webcam-btn">📹 웹캠으로</button>
+      <input type="file" id="at-file" accept="image/*" hidden />
+    </div>
+    <div id="at-media"></div>
+    <div id="at-result"></div>
+    <div id="at-bars"></div>
+    <div id="at-status"></div>
+  </section>
+
   <footer>
     데이터 제공: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+    · 동물상 모델: <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">Teachable Machine</a>
   </footer>
 
   <script>
@@ -173,6 +219,101 @@
     }
 
     load();
+  </script>
+
+  <!-- Teachable Machine 라이브러리 (모델 tfjs 1.7.4 기준) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+  <script>
+    (function () {
+      const MODEL_URL = "https://teachablemachine.withgoogle.com/models/DbfKo3m-K/";
+      const EMOJI = { "개": "🐶", "고양이": "🐱", "사슴": "🦌" };
+
+      const fileInput = document.getElementById("at-file");
+      const uploadBtn = document.getElementById("at-upload-btn");
+      const webcamBtn = document.getElementById("at-webcam-btn");
+      const mediaEl = document.getElementById("at-media");
+      const resultEl = document.getElementById("at-result");
+      const barsEl = document.getElementById("at-bars");
+      const statusEl = document.getElementById("at-status");
+
+      let model = null, webcam = null, rafId = null;
+
+      const setStatus = (m) => { statusEl.textContent = m || ""; };
+
+      async function ensureModel() {
+        if (model) return model;
+        setStatus("모델을 불러오는 중…");
+        model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+        setStatus("");
+        return model;
+      }
+
+      function stopWebcam() {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        if (webcam) { try { webcam.stop(); } catch (e) {} webcam = null; }
+        webcamBtn.textContent = "📹 웹캠으로";
+      }
+
+      function renderPredictions(preds) {
+        const sorted = [...preds].sort((a, b) => b.probability - a.probability);
+        const top = sorted[0];
+        resultEl.innerHTML =
+          `당신은 <span class="emoji">${EMOJI[top.className] || "🐾"}</span> ` +
+          `<b>${top.className}상</b>! ` +
+          `<span style="font-size:0.9rem;color:#5a6b7d">(${Math.round(top.probability * 100)}%)</span>`;
+        barsEl.innerHTML = sorted.map((p, i) => {
+          const pct = Math.round(p.probability * 100);
+          return `<div class="at-bar ${i === 0 ? "top" : ""}">
+              <div class="lbl"><span>${EMOJI[p.className] || ""} ${p.className}</span><span>${pct}%</span></div>
+              <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+            </div>`;
+        }).join("");
+      }
+
+      // ---- 사진 업로드 ----
+      uploadBtn.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        stopWebcam();
+        try { await ensureModel(); }
+        catch (err) { console.error(err); setStatus("모델을 불러오지 못했어요. 잠시 후 다시 시도해 주세요."); return; }
+
+        const img = new Image();
+        img.onload = async () => {
+          mediaEl.innerHTML = ""; mediaEl.appendChild(img);
+          setStatus("분석 중…");
+          try { renderPredictions(await model.predict(img)); setStatus(""); }
+          catch (err) { console.error(err); setStatus("분석에 실패했어요."); }
+        };
+        img.onerror = () => setStatus("이미지를 불러오지 못했어요.");
+        img.src = URL.createObjectURL(file);
+      });
+
+      // ---- 웹캠 (실시간) ----
+      webcamBtn.addEventListener("click", async () => {
+        if (webcam) { stopWebcam(); mediaEl.innerHTML = ""; setStatus(""); return; }
+        try { await ensureModel(); }
+        catch (err) { console.error(err); setStatus("모델을 불러오지 못했어요."); return; }
+
+        setStatus("카메라를 켜는 중…");
+        webcam = new tmImage.Webcam(280, 280, true); // width, height, flip(좌우반전)
+        try { await webcam.setup(); await webcam.play(); }
+        catch (err) { console.error(err); setStatus("카메라 접근이 거부됐어요. ‘사진 올리기’를 이용해 주세요."); webcam = null; return; }
+
+        webcamBtn.textContent = "⏹ 웹캠 끄기";
+        mediaEl.innerHTML = ""; mediaEl.appendChild(webcam.canvas);
+        setStatus("실시간 분석 중…");
+        const loop = async () => {
+          if (!webcam) return;
+          webcam.update();
+          try { renderPredictions(await model.predict(webcam.canvas)); } catch (e) {}
+          rafId = requestAnimationFrame(loop);
+        };
+        rafId = requestAnimationFrame(loop);
+      });
+    })();
   </script>
 </body>
 </html>
