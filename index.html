@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>서울 이번 주 날씨</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Malgun Gothic", "맑은 고딕", sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #4a90d9 0%, #83b9e8 45%, #cfe4f7 100%);
+      color: #1b2a3a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 48px;
+    }
+    header { text-align: center; color: #fff; margin-bottom: 28px; }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
+    header p { margin-top: 6px; font-size: 0.95rem; opacity: 0.9; }
+    #updated { font-size: 0.8rem; opacity: 0.8; margin-top: 4px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 18px;
+      padding: 20px 14px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(30, 60, 100, 0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(30, 60, 100, 0.28); }
+    .card.today {
+      background: #fff;
+      outline: 3px solid #ffd166;
+    }
+    .day { font-weight: 700; font-size: 1.05rem; }
+    .day.sun { color: #e63946; }
+    .day.sat { color: #1d6fd8; }
+    .date { font-size: 0.8rem; color: #5a6b7d; margin-bottom: 10px; }
+    .icon { font-size: 2.6rem; line-height: 1.1; margin: 6px 0; }
+    .desc { font-size: 0.82rem; color: #40506080; color: #405060; min-height: 2.2em; margin-bottom: 10px; }
+    .temp { font-size: 1.05rem; font-weight: 600; }
+    .temp .max { color: #e63946; }
+    .temp .min { color: #1d6fd8; }
+    .rain { margin-top: 8px; font-size: 0.8rem; color: #1d6fd8; }
+
+    .state { color: #fff; font-size: 1rem; text-align: center; margin-top: 40px; }
+    .state button {
+      margin-top: 14px; padding: 8px 18px; border: none; border-radius: 20px;
+      background: #fff; color: #2b6cb0; font-weight: 600; cursor: pointer;
+    }
+    footer { margin-top: 32px; color: #ffffffcc; font-size: 0.78rem; text-align: center; }
+    footer a { color: #fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌤️ 서울 이번 주 날씨</h1>
+    <p>서울특별시 · 7일 예보</p>
+    <div id="updated"></div>
+  </header>
+
+  <div id="content" class="grid"></div>
+  <div id="state" class="state">날씨 정보를 불러오는 중…</div>
+
+  <footer>
+    데이터 제공: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+  </footer>
+
+  <script>
+    // 서울 좌표
+    const LAT = 37.5665, LON = 126.9780;
+    const API = `https://api.open-meteo.com/v1/forecast`
+      + `?latitude=${LAT}&longitude=${LON}`
+      + `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max`
+      + `&timezone=Asia%2FSeoul&forecast_days=7`;
+
+    // WMO 날씨 코드 → 이모지 + 한글 설명
+    const WMO = {
+      0:  ["☀️", "맑음"],
+      1:  ["🌤️", "대체로 맑음"],
+      2:  ["⛅", "구름 조금"],
+      3:  ["☁️", "흐림"],
+      45: ["🌫️", "안개"],
+      48: ["🌫️", "짙은 안개"],
+      51: ["🌦️", "약한 이슬비"],
+      53: ["🌦️", "이슬비"],
+      55: ["🌧️", "강한 이슬비"],
+      56: ["🌧️", "언 이슬비"],
+      57: ["🌧️", "강한 언 이슬비"],
+      61: ["🌦️", "약한 비"],
+      63: ["🌧️", "비"],
+      65: ["🌧️", "강한 비"],
+      66: ["🌧️", "언 비"],
+      67: ["🌧️", "강한 언 비"],
+      71: ["🌨️", "약한 눈"],
+      73: ["🌨️", "눈"],
+      75: ["❄️", "강한 눈"],
+      77: ["🌨️", "싸락눈"],
+      80: ["🌦️", "약한 소나기"],
+      81: ["🌧️", "소나기"],
+      82: ["⛈️", "강한 소나기"],
+      85: ["🌨️", "약한 소낙눈"],
+      86: ["❄️", "강한 소낙눈"],
+      95: ["⛈️", "천둥번개"],
+      96: ["⛈️", "우박 동반 뇌우"],
+      99: ["⛈️", "강한 우박 뇌우"],
+    };
+
+    const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
+
+    function render(data) {
+      const d = data.daily;
+      const todayStr = new Date().toISOString().slice(0, 10);
+      let html = "";
+
+      for (let i = 0; i < d.time.length; i++) {
+        const dateObj = new Date(d.time[i] + "T00:00:00");
+        const wd = dateObj.getDay();
+        const [icon, desc] = WMO[d.weather_code[i]] || ["❔", "정보 없음"];
+        const isToday = d.time[i] === todayStr;
+        const dayClass = wd === 0 ? "sun" : wd === 6 ? "sat" : "";
+        const label = isToday ? "오늘" : WEEKDAYS[wd] + "요일";
+        const rain = d.precipitation_probability_max[i];
+
+        html += `
+          <div class="card ${isToday ? "today" : ""}">
+            <div class="day ${dayClass}">${label}</div>
+            <div class="date">${dateObj.getMonth() + 1}/${dateObj.getDate()}</div>
+            <div class="icon">${icon}</div>
+            <div class="desc">${desc}</div>
+            <div class="temp">
+              <span class="max">${Math.round(d.temperature_2m_max[i])}°</span>
+              /
+              <span class="min">${Math.round(d.temperature_2m_min[i])}°</span>
+            </div>
+            <div class="rain">💧 ${rain ?? 0}%</div>
+          </div>`;
+      }
+
+      document.getElementById("content").innerHTML = html;
+      document.getElementById("state").style.display = "none";
+      const now = new Date();
+      document.getElementById("updated").textContent =
+        `업데이트: ${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()} ` +
+        `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    }
+
+    function showError() {
+      const state = document.getElementById("state");
+      state.style.display = "block";
+      state.innerHTML =
+        `날씨 정보를 불러오지 못했습니다.<br>인터넷 연결을 확인해 주세요.` +
+        `<br><button onclick="load()">다시 시도</button>`;
+    }
+
+    function load() {
+      const state = document.getElementById("state");
+      state.style.display = "block";
+      state.textContent = "날씨 정보를 불러오는 중…";
+      fetch(API)
+        .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(render)
+        .catch((e) => { console.error(e); showError(); });
+    }
+
+    load();
+  </script>
+</body>
+</html>
